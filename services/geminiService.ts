@@ -1,8 +1,9 @@
 
-import React from 'react';
+// Fix: Use correct imports and Google GenAI SDK patterns
 import { 
   GoogleGenAI, 
   Type, 
+  FunctionDeclaration, 
   LiveServerMessage, 
   Modality, 
   LiveSession,
@@ -10,143 +11,107 @@ import {
 } from "@google/genai";
 import { ConversationMessage } from "../types";
 
-// --- Type Definitions ---
-
-export interface LiveSessionController {
-  sessionPromise: Promise<LiveSession>;
-  startMicrophone: () => Promise<void>;
-  stopMicrophoneInput: () => void;
-  sendImage: (base64: string) => void;
-  closeSession: () => void;
-}
+// Fix: Always use process.env.API_KEY for initializing GoogleGenAI
+const getAIClient = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getSystemInstruction = (voiceStyle: string, customText?: string) => {
     let styleInstruction = "";
-
     switch(voiceStyle) {
-        case 'carioca_masc':
-            styleInstruction = `
-            VOZ E SOTAQUE: Masculino Carioca (Rio de Janeiro).
-            TONALIDADE: Parceiro, malandro, direto e firme.
-            GÍRIAS OBRIGATÓRIAS: Use "mermão", "pô", "cara", "valeu", "tá ligado?", "coé".
-            PERSONALIDADE: Um consultor que é seu "chegado". Ele te guia com a malandragem de quem conhece tudo.
-            `;
-            break;
-        case 'pernambucana_fem':
-            styleInstruction = `
-            VOZ E SOTAQUE: Feminino Pernambucano (Recife/Olinda).
-            TONALIDADE: Extremamente doce, amorosa, acolhedora e "quentinha".
-            GÍRIAS OBRIGATÓRIAS: Use "oxente", "visse", "meu amor", "ô mainha", "chegue cá".
-            PERSONALIDADE: Uma guia que te trata com um carinho maternal e apaixonado.
-            `;
-            break;
-        case 'carioca_sexy_fem':
-            styleInstruction = `
-            VOZ E SOTAQUE: Feminino Carioca da Gema.
-            TONALIDADE: Sexy, polida, magnética e carinhosa.
-            GÍRIAS OBRIGATÓRIAS: Use "meu bem", "meu lindo", "gatão", "vamo que vamo", "fala tu".
-            PERSONALIDADE: Uma parceira sedutora e inteligente. Ela te guia com um tom de voz que te envolve, chamando você de "meu bem" e mostrando que você é o foco dela.
-            `;
-            break;
-        default:
-            styleInstruction = `
-            TONALIDADE: Doce, amorosa e polida.
-            PERSONALIDADE: Hypley, sua guia dedicada.
-            `;
+        case 'carioca_masc': styleInstruction = "Fale como um carioca malandro, use 'mermão' e 'pô'."; break;
+        case 'pernambucana_fem': styleInstruction = "Fale como uma pernambucana doce, use 'oxente' e 'visse'."; break;
+        case 'carioca_sexy_fem': styleInstruction = "Fale como uma carioca sedutora e inteligente."; break;
+        default: styleInstruction = "Fale de forma doce, polida e prestativa.";
     }
 
-    return `
-    IDENTIDADE: HYPLEY - SUA GUIA IA PERSONALIZADA
-    Você é Hypley.
-    ${styleInstruction}
-    ${customText ? `\nINSTRUÇÃO ADICIONAL DE PERSONALIDADE: ${customText}` : ''}
-    
-    **DIRETRIZES FUNDAMENTAIS:**
-    1. Responda sempre em Português do Brasil respeitando o sotaque e gírias acima.
-    2. Use sua visão para analisar a tela do usuário e guiá-lo com paciência.
-    3. Seja proativa e antecipe erros.
-    `.trim();
+    return `IDENTIDADE: HYPLEY IA. ${styleInstruction} ${customText ? `PERSONA EXTRA: ${customText}` : ''}
+    REGRAS: Seja rápida. Respostas curtas (máximo 15 segundos). 
+    VISÃO: Você pode ver imagens. Analise-as detalhadamente se o usuário pedir.`.trim();
 };
 
-export const baseSystemInstruction = getSystemInstruction('default');
-
-// --- API Functions ---
-
-export const validateApiKey = async (key: string): Promise<{ valid: boolean }> => {
-    try {
-        const ai = new GoogleGenAI({ apiKey: key });
-        await ai.models.generateContent({ model: 'gemini-3-flash-preview', contents: 'Hello' });
-        return { valid: true };
-    } catch (e) { return { valid: false }; }
-};
-
-export const summarizeText = async (text: string): Promise<string> => {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    try {
-        const response: GenerateContentResponse = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview',
-            contents: `Resuma este tópico em até 3 palavras: ${text.substring(0, 500)}`,
-        });
-        return response.text?.trim() || "Nova Conversa";
-    } catch (error) { return "Nova Conversa"; }
-};
-
-export const sendTextMessage = async (
-    message: string, 
-    history: ConversationMessage[], 
-    voiceStyle: string, 
-    customText?: string
-): Promise<GenerateContentResponse> => {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    const systemInstruction = getSystemInstruction(voiceStyle, customText);
-    const contents: any[] = history.slice(-10).map(msg => ({ 
-        role: msg.role === 'user' ? 'user' : 'model', 
-        parts: [{ text: msg.text }] 
-    }));
-    
-    return await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: [...contents, { role: 'user', parts: [{ text: message }] }],
-        config: { systemInstruction }
-    });
-};
-
-// FIX: Added generateImage function to solve the missing export error in ImageGeneratorPage.tsx
+// Fix: Implement generateImage using gemini-2.5-flash-image
 export const generateImage = async (prompt: string, style: string, aspectRatio: string): Promise<string> => {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = getAIClient();
+    
     const fullPrompt = `Gere uma imagem com a seguinte descrição: "${prompt}". Estilo visual: ${style}.`;
     
-    // Supported aspect ratios are "1:1", "3:4", "4:3", "9:16", and "16:9".
-    let arValue: "1:1" | "4:3" | "3:4" | "16:9" | "9:16" = "1:1";
+    // Mapping UI aspect ratio strings to SDK supported values
+    let arValue: "1:1" | "3:4" | "4:3" | "9:16" | "16:9" = "1:1";
     if (aspectRatio.includes("16:9")) arValue = "16:9";
     else if (aspectRatio.includes("9:16")) arValue = "9:16";
     else if (aspectRatio.includes("3:4")) arValue = "3:4";
     else if (aspectRatio.includes("4:3")) arValue = "4:3";
 
-    try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash-image',
-            contents: {
-                parts: [{ text: fullPrompt }]
-            },
-            config: {
-                imageConfig: {
-                   aspectRatio: arValue
-                }
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+            parts: [{ text: fullPrompt }]
+        },
+        config: {
+            imageConfig: {
+               aspectRatio: arValue
+            }
+        }
+    });
+    
+    // Fix: Iterate through parts to find the image part (inlineData)
+    if (response.candidates?.[0]?.content?.parts) {
+        for (const part of response.candidates[0].content.parts) {
+            if (part.inlineData?.data) {
+                return part.inlineData.data;
+            }
+        }
+    }
+    
+    throw new Error("Nenhuma imagem foi retornada pela IA.");
+};
+
+export const sendTextMessage = async (
+    message: string,
+    history: ConversationMessage[],
+    voiceStyle: string,
+    file?: { base64: string; mimeType: string },
+    customInstruction?: string
+): Promise<GenerateContentResponse> => {
+    const ai = getAIClient();
+    
+    // Otimização: Filtramos o histórico para enviar apenas o essencial (últimas 6 interações)
+    const contents = history
+        .filter(msg => (msg.role === 'user' || msg.role === 'model') && msg.text)
+        .slice(-6) 
+        .map(msg => ({
+            role: msg.role === 'user' ? 'user' : 'model',
+            parts: (msg.imageUrl && msg.imageUrl.startsWith('data:'))
+                ? [{ text: msg.text || "Analise esta imagem." }, { inlineData: { data: msg.imageUrl.split(',')[1], mimeType: 'image/jpeg' } }] 
+                : [{ text: msg.text }]
+        }));
+
+    const currentParts: any[] = [{ text: message || "Analise esta imagem." }];
+    if (file) {
+        currentParts.push({
+            inlineData: {
+                data: file.base64,
+                mimeType: file.mimeType
             }
         });
-        
-        // Find the image part in the response
-        const imagePart = response.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
-        if (imagePart?.inlineData?.data) {
-            return imagePart.inlineData.data;
-        }
-        throw new Error("Nenhuma imagem retornada pelo modelo.");
-    } catch (error) {
-        console.error("Image generation error:", error);
-        throw error;
     }
+
+    return await ai.models.generateContent({
+        model: 'gemini-3-flash-preview', // Fix: Use gemini-3-flash-preview for basic text tasks
+        contents: [...contents, { role: 'user', parts: currentParts }],
+        config: { 
+            systemInstruction: getSystemInstruction(voiceStyle, customInstruction),
+            tools: file ? [] : [{ googleSearch: {} }], 
+            temperature: 0.6 // Menor temperatura = respostas mais diretas e rápidas
+        }
+    });
 };
+
+export interface LiveSessionController {
+  sessionPromise: Promise<LiveSession>;
+  startMicrophone: () => Promise<void>;
+  stopMicrophoneInput: () => void;
+  closeSession: () => void;
+}
 
 export const createLiveSession = (
     callbacks: any, 
@@ -155,16 +120,14 @@ export const createLiveSession = (
     nextStartTimeRef: React.MutableRefObject<number>, 
     micStreamRef: React.MutableRefObject<MediaStream | null>, 
     analyser: AnalyserNode | null, 
+    history: ConversationMessage[],
     voiceStyle: string,
     customText?: string
 ): LiveSessionController => {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    
-    // Buffers to store transcriptions
+    const ai = getAIClient();
     let currentInputTranscription = '';
     let currentOutputTranscription = '';
 
-    // Mapear voz do Gemini de acordo com o estilo
     const voiceMap: Record<string, string> = {
         'carioca_masc': 'Fenrir',
         'pernambucana_fem': 'Zephyr',
@@ -172,30 +135,25 @@ export const createLiveSession = (
     };
 
     const sessionPromise = ai.live.connect({
-        model: 'gemini-2.5-flash-native-audio-preview-12-2025',
+        model: 'gemini-2.5-flash-native-audio-preview-12-2025', // Fix: Correct model for real-time audio
         config: {
             systemInstruction: getSystemInstruction(voiceStyle, customText),
             responseModalities: [Modality.AUDIO],
             speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voiceMap[voiceStyle] || 'Zephyr' } } },
-            // FIX: Added transcription configs to enable callbacks used in App.tsx
             inputAudioTranscription: {},
             outputAudioTranscription: {},
+            tools: [{ googleSearch: {} }]
         },
         callbacks: {
-            onopen: () => callbacks.onOpen(),
+            onopen: () => callbacks.onOpen?.(),
             onmessage: async (msg: LiveServerMessage) => {
-                // FIX: Collect transcriptions to pass to callbacks
-                if (msg.serverContent?.inputTranscription) {
-                    currentInputTranscription += msg.serverContent.inputTranscription.text;
-                }
-                if (msg.serverContent?.outputTranscription) {
-                    currentOutputTranscription += msg.serverContent.outputTranscription.text;
-                }
+                if (msg.serverContent?.inputTranscription) currentInputTranscription += msg.serverContent.inputTranscription.text;
+                if (msg.serverContent?.outputTranscription) currentOutputTranscription += msg.serverContent.outputTranscription.text;
 
                 const audio = msg.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data;
                 if (audio) {
-                    callbacks.onModelStartSpeaking();
-                    const buffer = await decodeAudioData(base64ToUint8Array(audio), outputCtx, 24000, 1);
+                    callbacks.onModelStartSpeaking?.();
+                    const buffer = await decodeAudioData(decodeBase64(audio), outputCtx, 24000, 1);
                     const source = outputCtx.createBufferSource();
                     source.buffer = buffer;
                     source.connect(analyser || outputCtx.destination);
@@ -203,21 +161,13 @@ export const createLiveSession = (
                     source.start(start);
                     nextStartTimeRef.current = start + buffer.duration;
                 }
-                if (msg.serverContent?.interrupted) callbacks.onInterrupt?.();
                 if (msg.serverContent?.turnComplete) {
-                    callbacks.onTurnComplete();
-                    // FIX: Notify App.tsx about the completed speech turns
-                    if (currentInputTranscription) {
-                        callbacks.onUserStopSpeaking?.(currentInputTranscription);
-                        currentInputTranscription = '';
-                    }
-                    if (currentOutputTranscription) {
-                        callbacks.onModelStopSpeaking?.(currentOutputTranscription);
-                        currentOutputTranscription = '';
-                    }
+                    if (currentInputTranscription) callbacks.onUserStopSpeaking?.(currentInputTranscription);
+                    if (currentOutputTranscription) callbacks.onModelStopSpeaking?.(currentOutputTranscription);
+                    currentInputTranscription = ''; currentOutputTranscription = '';
                 }
             },
-            onclose: () => callbacks.onClose(),
+            onclose: () => callbacks.onClose?.(),
             onerror: e => callbacks.onerror?.(e)
         }
     });
@@ -226,24 +176,18 @@ export const createLiveSession = (
         sessionPromise,
         startMicrophone: async () => {
             const stream = await navigator.mediaDevices.getUserMedia({ 
-                audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, sampleRate: 16000, channelCount: 1 } 
+                audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 16000, channelCount: 1 } 
             });
             micStreamRef.current = stream;
             const source = inputCtx.createMediaStreamSource(stream);
-            const proc = inputCtx.createScriptProcessor(4096, 1, 1);
+            const proc = inputCtx.createScriptProcessor(1024, 1, 1);
             proc.onaudioprocess = e => {
                 const data = e.inputBuffer.getChannelData(0);
                 const pcm = new Int16Array(data.length);
                 for (let i = 0; i < data.length; i++) pcm[i] = data[i] * 0x7FFF;
-                sessionPromise.then(s => s.sendRealtimeInput({ 
-                    media: { mimeType: 'audio/pcm;rate=16000', data: arrayBufferToBase64(pcm.buffer) } 
-                }));
+                sessionPromise.then(s => s.sendRealtimeInput({ media: { mimeType: 'audio/pcm;rate=16000', data: encodeBase64(new Uint8Array(pcm.buffer)) } }));
             };
-            source.connect(proc); 
-            proc.connect(inputCtx.destination);
-        },
-        sendImage: (base64: string) => {
-            sessionPromise.then(s => s.sendRealtimeInput({ media: { mimeType: 'image/jpeg', data: base64 } }));
+            source.connect(proc); proc.connect(inputCtx.destination);
         },
         stopMicrophoneInput: () => {
             micStreamRef.current?.getTracks().forEach(t => t.stop());
@@ -253,22 +197,11 @@ export const createLiveSession = (
     };
 };
 
-function base64ToUint8Array(base64: string): Uint8Array {
-    const bin = atob(base64);
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return bytes;
-}
+// Fix: Implement manual base64 encoding/decoding as per guidelines
+function decodeBase64(b: string) { return new Uint8Array(atob(b).split("").map(c => c.charCodeAt(0))); }
+function encodeBase64(b: Uint8Array) { return btoa(String.fromCharCode(...b)); }
 
-function arrayBufferToBase64(buffer: ArrayBuffer): string {
-    let bin = '';
-    const bytes = new Uint8Array(buffer);
-    for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
-    return btoa(bin);
-}
-
-// FIX: decodeAudioData implementation for raw PCM data from Live API
-async function decodeAudioData(data: Uint8Array, ctx: AudioContext, rate: number, channels: number): Promise<AudioBuffer> {
+async function decodeAudioData(data: Uint8Array, ctx: AudioContext, rate: number, channels: number) {
     const int16 = new Int16Array(data.buffer);
     const frames = int16.length / channels;
     const buffer = ctx.createBuffer(channels, frames, rate);
