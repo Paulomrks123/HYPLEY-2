@@ -1,0 +1,9 @@
+{
+  "name": "versão 6.0",
+  "description": "Um assistente de voz em tempo real que conversa em português do Brasil, respondendo por voz e exibindo um resumo em texto na tela. Agora com compartilhamento de tela para assistência contextualizada.",
+  "requestFramePermissions": [
+    "microphone",
+    "display-capture",
+    "camera"
+  ]
+}

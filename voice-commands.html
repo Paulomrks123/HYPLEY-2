@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link id="favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234A5568'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='70' font-weight='bold' fill='white' font-family='sans-serif'%3EG%3C/text%3E%3C/svg%3E">
+    <title>Guia de Comandos de Voz - Gideão IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        /* Default Dark Theme */
+        --bg-primary: #0C1A3A;
+        --bg-secondary: #0E224C;
+        --bg-tertiary: #1B2B52;
+        --text-primary: #D8E1F0;
+        --text-secondary: #a0aec0; /* Lighter gray */
+        --accent-primary: #00B7FF;
+        --accent-primary-hover: #00A8E8;
+        --accent-primary-text: #0C1A3A;
+        --border-color: #1B2B52;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+      }
+      .prose {
+        color: var(--text-secondary);
+      }
+      .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6, .prose strong {
+        color: var(--text-primary);
+      }
+      .prose code {
+        color: #86e1f9;
+        font-weight: 600;
+        padding: 0.2em 0.4em;
+        margin: 0;
+        font-size: 85%;
+        background-color: rgba(135, 131, 120, 0.15);
+        border-radius: 6px;
+      }
+      .prose a {
+          color: var(--accent-primary);
+          text-decoration: none;
+      }
+      .prose a:hover {
+          text-decoration: underline;
+      }
+      .prose ul > li::marker {
+        color: var(--accent-primary);
+      }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen container mx-auto px-4 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold">
+                <span class="text-white">Gideão</span><span class="text-[var(--accent-primary)]">IA</span>
+            </h1>
+            <h2 class="text-3xl font-bold mt-2 text-white">Guia de Comandos de Voz</h2>
+            <p class="text-lg text-[var(--text-secondary)] mt-4 max-w-2xl mx-auto">Domine a arte de conversar com Gideão para uma assistência mais rápida e inteligente.</p>
+        </header>
+
+        <main class="max-w-4xl mx-auto prose prose-lg">
+            <h3>Seu Copiloto Inteligente</h3>
+            <p>A interação por voz com Gideão foi projetada para ser intuitiva e poderosa. Ative o microfone, fale com clareza e ele entenderá sua intenção. A IA começa a processar sua fala após uma breve pausa.</p>
+            
+            <div class="bg-[var(--bg-secondary)] p-6 rounded-xl border border-[var(--border-color)] my-8 not-prose">
+                <h4 class="text-xl font-bold !mt-0 text-white">O Comando Mais Poderoso: Análise Visual Interativa</h4>
+                <p class="text-base text-[var(--text-secondary)]">Esta é a função principal de Gideão, que permite que ele "veja" e "aponte" para elementos na sua tela. A lógica é simples: você precisa combinar uma palavra de <strong>captura</strong> com uma palavra de <strong>ação</strong> na mesma frase.</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <h5 class="text-lg font-semibold text-white">Passo 1: A Captura (Peça para "ver")</h5>
+                        <p class="text-base text-[var(--text-secondary)]">Diga ao Gideão para analisar a tela atual. Use palavras como:</p>
+                        <ul class="list-none p-0 space-y-2 text-base text-[var(--text-secondary)]">
+                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-[var(--accent-primary)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg><code class="text-[#86e1f9] font-semibold p-1 bg-black/20 rounded-md">print</code></li>
+                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-[var(--accent-primary)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg><code class="text-[#86e1f9] font-semibold p-1 bg-black/20 rounded-md">foto</code></li>
+                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-[var(--accent-primary)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg><code class="text-[#86e1f9] font-semibold p-1 bg-black/20 rounded-md">captura de tela</code></li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h5 class="text-lg font-semibold text-white">Passo 2: A Ação (Peça para "fazer")</h5>
+                        <p class="text-base text-[var(--text-secondary)]">Em seguida, diga o que você quer que ele faça. Use palavras como:</p>
+                        <ul class="list-none p-0 space-y-2 text-base text-[var(--text-secondary)]">
+                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-[var(--accent-primary)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg><code class="text-[#86e1f9] font-semibold p-1 bg-black/20 rounded-md">marque</code></li>
+                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-[var(--accent-primary)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg><code class="text-[#86e1f9] font-semibold p-1 bg-black/20 rounded-md">destaque</code></li>
+                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-[var(--accent-primary)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg><code class="text-[#86e1f9] font-semibold p-1 bg-black/20 rounded-md">aponte</code></li>
+                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-[var(--accent-primary)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg><code class="text-[#86e1f9] font-semibold p-1 bg-black/20 rounded-md">mostre</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 border-t border-[var(--border-color)] pt-6">
+                    <h5 class="text-lg font-semibold text-white">Exemplos Práticos (Juntando Tudo)</h5>
+                    <p class="text-base text-[var(--text-secondary)]">Ao combinar os dois tipos de palavras, você ativa o destaque visual. Gideão tira uma "foto" mental da sua tela e marca o elemento que você pediu:</p>
+                    <div class="space-y-3 mt-4">
+                        <blockquote class="border-l-4 border-[var(--accent-primary)] pl-4 italic my-0 py-1 text-base text-[var(--text-primary)]">"Tire um <strong>print</strong> e <strong>marque</strong> o botão de login para mim."</blockquote>
+                        <blockquote class="border-l-4 border-[var(--accent-primary)] pl-4 italic my-0 py-1 text-base text-[var(--text-primary)]">"<strong>Mostre</strong>-me onde está o menu principal, <strong>tire uma foto</strong> e <strong>aponte</strong>."</blockquote>
+                        <blockquote class="border-l-4 border-[var(--accent-primary)] pl-4 italic my-0 py-1 text-base text-[var(--text-primary)]">"Faça uma <strong>captura de tela</strong> e <strong>destaque</strong> onde eu devo clicar."</blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Controlando o Microfone por Voz</h4>
+            <p>Você pode encerrar a sessão de voz a qualquer momento pedindo para Gideão parar de ouvir. Isso desativará o microfone de forma segura.</p>
+            <ul>
+                <li>"Desligue o microfone."</li>
+                <li>"Pare de ouvir, por favor."</li>
+                <li>"Pode parar de me escutar agora."</li>
+            </ul>
+
+            <h4>Controlando o Compartilhamento de Tela por Voz</h4>
+            <p>Você pode encerrar a sessão de compartilhamento de tela a qualquer momento pedindo para Gideão parar de compartilhar. Isso desativará o compartilhamento de forma segura.</p>
+            <ul>
+                <li>"Pare de compartilhar a tela."</li>
+                <li>"Desligue o compartilhamento de tela, por favor."</li>
+                <li>"Encerrar o compartilhamento."</li>
+            </ul>
+
+            <h4>Ativando o Compartilhamento de Tela por Voz</h4>
+            <p>Você pode iniciar o compartilhamento de tela a qualquer momento pedindo para Gideão ativar o compartilhamento. Isso iniciará o processo de compartilhamento.</p>
+            <ul>
+                <li>"Compartilhe minha tela."</li>
+                <li>"Ativar compartilhamento de tela."</li>
+                <li>"Comece a compartilhar minha tela."</li>
+            </ul>
+            
+            <h4>Perguntando a Data e Hora no Brasil</h4>
+            <p>Gideão pode te informar a data e hora exatas de Brasília. Basta perguntar de forma direta:</p>
+            <ul>
+                <li>"Que horas são agora em Brasília?"</li>
+                <li>"Qual é a data e hora atuais no Brasil?"</li>
+                <li>"Me diga a hora de hoje."</li>
+            </ul>
+            
+            <h4>Navegação e Orientação Geral (Conversa Natural)</h4>
+            <p>Para a maioria das tarefas, você não precisa de palavras-chave. Apenas descreva sua dúvida ou objetivo como faria com uma pessoa.</p>
+            <ul>
+                <li>"Onde eu encontro as configurações de perfil?"</li>
+                <li>"Como eu faço para alterar meu email nesta página?"</li>
+                <li>"Me guie para a seção de pagamentos, por favor."</li>
+            </ul>
+            
+            <h4>Dicas para Melhor Performance</h4>
+            <ul>
+                <li><strong>Fale Claramente:</strong> Evite ruídos de fundo e fale em um ritmo natural.</li>
+                <li><strong>Seja Específico:</strong> Em vez de "marque o botão", diga "marque o botão azul 'Confirmar'". A precisão ajuda a IA a ser mais rápida.</li>
+                <li><strong>Pausa para Resposta:</strong> Gideão é um bom ouvinte. Fale seu comando e faça uma pausa. Ele entenderá que é a vez dele de agir.</li>
+            </ul>
+        </main>
+
+        <footer class="text-center mt-16 text-[var(--text-secondary)] text-sm">
+            <p>&copy; 2024 Gideão IA. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+</body>
+</html>
