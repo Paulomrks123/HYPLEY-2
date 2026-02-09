@@ -17,12 +17,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link id="favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%233b82f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='70' font-weight='bold' fill='white' font-family='sans-serif'%3EH%3C/text%3E%3C/svg%3E">
-    <title>Hypley IA</title>
+    <title>Hypley IA | Assistente de Próxima Geração</title>
     <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
         --bg-primary: #020617;
@@ -31,11 +31,8 @@
         --text-primary: #f8fafc;
         --text-secondary: #94a3b8;
         --accent-primary: #3b82f6;
-        --accent-primary-hover: #2563eb;
-        --accent-primary-text: #ffffff;
-        --border-color: #1e293b;
-        --destructive-color: #ef4444;
-        --success-color: #22c55e;
+        --accent-glow: rgba(59, 130, 246, 0.5);
+        --border-color: rgba(255, 255, 255, 0.1);
       }
       
       .theme-light {
@@ -45,82 +42,72 @@
         --text-primary: #020617;
         --text-secondary: #64748b;
         --accent-primary: #3b82f6;
-        --accent-primary-hover: #2563eb;
-        --accent-primary-text: #ffffff;
-        --border-color: #e2e8f0;
-        --destructive-color: #ef4444;
-        --success-color: #22c55e;
-      }
-
-      html, body {
-        min-height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        overscroll-behavior: none;
-      }
-      
-      #root {
-        min-height: 100%;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
+        --border-color: rgba(0, 0, 0, 0.05);
       }
 
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
         background-color: var(--bg-primary);
         color: var(--text-primary);
-        transition: background-color 0.4s ease, color 0.4s ease;
+        overflow: hidden;
       }
 
-      /* Wave Animation for Voice */
+      .glass {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-color);
+      }
+
+      /* Voice Waves Visualization */
       .wave-container {
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 4px;
-        height: 40px;
+        gap: 3px;
+        height: 24px;
       }
       .wave-bar {
-        width: 4px;
-        height: 10px;
+        width: 3px;
+        height: 4px;
         background: var(--accent-primary);
-        border-radius: 4px;
-        animation: wave 1s infinite ease-in-out;
+        border-radius: 10px;
+        transition: height 0.1s ease;
       }
+      .wave-active .wave-bar {
+        animation: wave-anim 1s infinite ease-in-out;
+      }
+      @keyframes wave-anim {
+        0%, 100% { height: 4px; }
+        50% { height: 20px; }
+      }
+      .wave-bar:nth-child(1) { animation-delay: 0.0s; }
       .wave-bar:nth-child(2) { animation-delay: 0.1s; }
       .wave-bar:nth-child(3) { animation-delay: 0.2s; }
       .wave-bar:nth-child(4) { animation-delay: 0.3s; }
       .wave-bar:nth-child(5) { animation-delay: 0.4s; }
 
-      @keyframes wave {
-        0%, 100% { height: 10px; opacity: 0.5; }
-        50% { height: 35px; opacity: 1; }
+      /* Mic Pulsing */
+      .mic-active {
+        box-shadow: 0 0 20px var(--accent-glow);
+        animation: mic-pulse 2s infinite;
+      }
+      @keyframes mic-pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); box-shadow: 0 0 30px var(--accent-glow); }
+        100% { transform: scale(1); }
       }
 
-      .mic-pulse {
-        animation: pulse-ring 1.5s infinite;
-      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 5px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
 
-      @keyframes pulse-ring {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
-        70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-      }
-
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: var(--bg-tertiary);
-        border-radius: 10px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: var(--accent-primary);
+      /* Code Block Styles */
+      pre {
+        background: #010409 !important;
+        border-radius: 8px;
+        border: 1px solid #30363d;
       }
     </style>
 </head>

@@ -1,6 +1,7 @@
+// @google/genai guidelines: Using firebase for persistent data storage
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, signInAnonymously } from "firebase/auth";
-import { initializeFirestore, doc, onSnapshot, setDoc, serverTimestamp, updateDoc, increment, collection, query, where, orderBy, addDoc, Timestamp, deleteDoc, getDocs, limit, getDoc } from "firebase/firestore";
+import { initializeFirestore, doc, onSnapshot, setDoc, serverTimestamp, updateDoc, increment, collection, query, where, orderBy, addDoc, Timestamp, deleteDoc, getDocs, limit, getDoc, startAfter } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
@@ -48,5 +49,7 @@ export {
     deleteDoc,
     getDocs,
     limit,
-    getDoc
+    getDoc,
+    // FIX: Exportando startAfter para permitir paginação no App.tsx
+    startAfter
 };
